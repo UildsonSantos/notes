@@ -1,26 +1,16 @@
-
 import 'package:note/domain/entities/entities.dart';
 
 class NoteModel extends NoteEntity {
-  const NoteModel({
-    required String id,
-    required String title,
-    required String content,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    bool isArchived = false,
-    bool isPinned = false,
-    bool isCompleted = false,
-  }) : super(
-          id: id,
-          title: title,
-          content: content,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          isArchived: isArchived,
-          isPinned: isPinned,
-          isCompleted: isCompleted,
-        );
+  NoteModel({
+    required super.id,
+    required super.title,
+    required super.content,
+    required DateTime createdAt, 
+    required super.updatedAt,
+    required super.isArchived,
+    required super.isPinned,
+    required super.isCompleted,
+  });
 
   factory NoteModel.fromMap(Map<String, dynamic> map) {
     return NoteModel(
@@ -40,11 +30,31 @@ class NoteModel extends NoteEntity {
       'id': id,
       'title': title,
       'content': content,
-      'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'isArchived': isArchived ? 1 : 0,
       'isPinned': isPinned ? 1 : 0,
       'isCompleted': isCompleted ? 1 : 0,
     };
+  }
+
+  NoteModel copyWith({
+    String? id,
+    String? title,
+    String? content,
+    DateTime? updatedAt,
+    bool? isArchived,
+    bool? isPinned,
+    bool? isCompleted,
+  }) {
+    return NoteModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      createdAt: createdAt, // Mantendo o valor original
+      updatedAt: updatedAt ?? this.updatedAt,
+      isArchived: isArchived ?? this.isArchived,
+      isPinned: isPinned ?? this.isPinned,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
   }
 }

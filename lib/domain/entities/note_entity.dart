@@ -10,19 +10,18 @@ class NoteEntity extends Equatable {
   final bool isPinned;
   final bool isCompleted;
 
-  const NoteEntity({
+  NoteEntity({
     required this.id,
     required this.title,
     required this.content,
-    required this.createdAt,
     required this.updatedAt,
     this.isArchived = false,
     this.isPinned = false,
     this.isCompleted = false,
-  });
+  }) : createdAt = DateTime.now();
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         title,
         content,
