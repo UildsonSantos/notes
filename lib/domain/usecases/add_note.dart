@@ -8,7 +8,7 @@ class AddNote {
 
   AddNote(this.repository);
 
-  Future<Either<Failure, void>> call(NoteEntity note) async {
+  Future<Either<Failure, NoteEntity>> call(NoteEntity note) async {
     return await repository.addNote(note);
   }
 }
