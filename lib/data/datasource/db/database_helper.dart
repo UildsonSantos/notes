@@ -1,5 +1,3 @@
-import 'package:dartz/dartz.dart';
-import 'package:note/core/error/error.dart';
 import 'package:note/data/models/note_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -9,6 +7,14 @@ class DatabaseHelper {
   static Database? _database;
 
   final tableName = 'note';
+  final id = 'id';
+  final title = 'title';
+  final content = 'content';
+  final createdAt = 'createdAt';
+  final updatedAt = 'updatedAt';
+  final isArchived = 'isArchived';
+  final isPinned = 'isPinned';
+  final isCompleted = 'isCompleted';
 
   DatabaseHelper._internal();
 
@@ -33,76 +39,60 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE Note (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        content TEXT,
-        createdAt TEXT,
-        updatedAt TEXT,
-        isArchived INTEGER,
-        isPinned INTEGER,
-        isCompleted INTEGER
+      CREATE TABLE $tableName (
+        $id TEXT PRIMARY KEY,
+        $title TEXT NOT NULL,
+        $content TEXT,
+        $createdAt TEXT,
+        $updatedAt TEXT,
+        $isArchived INTEGER,
+        $isPinned INTEGER,
+        $isCompleted INTEGER
       )
     ''');
   }
 
-  Future<Either<Failure, NoteModel>> add(NoteModel note) async {
-    try {
-      final db = await database;
-      final id = await db.insert(
-        tableName,
-        note.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      // Criar um novo NoteModel com o ID atualizado
-      final noteWithId = note.copyWith(id: id.toString());
-      return Right(noteWithId);
-    } catch (e) {
-      return const Left(DatabaseFailure('Failed to add note'));
-    }
+  Future<NoteModel> add(NoteModel note) async {
+    final db = await database;
+    final id = await db.insert(
+      tableName,
+      note.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    // Criar um novo NoteModel com o ID atualizado
+    final noteWithId = note.copyWith(id: id.toString());
+    return noteWithId;
   }
 
-  Future<Either<Failure, List<NoteModel>>> get() async {
-    try {
-      final db = await database;
-      final List<Map<String, dynamic>> maps = await db.query(
-        tableName,
-      );
-      final notes = List.generate(maps.length, (i) {
-        return NoteModel.fromMap(maps[i]);
-      });
-      return Right(notes);
-    } catch (e) {
-      return const Left(DatabaseFailure('Failed to get notes'));
-    }
+  Future<List<NoteModel>> fetch() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      tableName,
+    );
+    final notes = List.generate(maps.length, (i) {
+      return NoteModel.fromMap(maps[i]);
+    });
+    return notes;
   }
 
-  Future<Either<Failure, int>> update(NoteModel note) async {
-    try {
-      final db = await database;
-      final rowsAffected = await db.update(
-        tableName,
-        note.toMap(),
-        where: 'id = ?',
-        whereArgs: [note.id],
-      );
-      return Right(rowsAffected);
-    } catch (e) {
-      return const Left(DatabaseFailure('Failed to update note'));
-    }
+  Future<int?> update(NoteModel note) async {
+    final db = await database;
+    final rowsAffected = await db.update(
+      tableName,
+      note.toMap(),
+      where: 'id = ?',
+      whereArgs: [note.id],
+    );
+    return rowsAffected;
   }
 
-  Future<Either<Failure, int>> delete(int id) async {
-    try {
-      final db = await database;
-      final rowsDeleted = await db.delete(
-        tableName,
-        where: 'id = ?',
-        whereArgs: [id],
-      );
-      return Right(rowsDeleted);
-    } catch (e) {
-      return const Left(DatabaseFailure('Failed to delete note'));
-    }
+  Future<int?> delete(int id) async {
+    final db = await database;
+    final rowsDeleted = await db.delete(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return rowsDeleted;
   }
 }
