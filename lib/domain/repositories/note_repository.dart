@@ -4,7 +4,7 @@ import 'package:note/domain/entities/entities.dart';
 
 abstract class NoteRepository {
   Future<Either<Failure, NoteEntity>> addNote(NoteEntity note);
-  Future<Either<Failure, int>> updateNote(NoteEntity note);
-  Future<Either<Failure, int>> deleteNote(int id);
-  Future<Either<Failure, List<NoteEntity>>> getNotes();
+  Future<Either<Failure, int?>> updateNote(NoteEntity note);
+  Future<Either<Failure, int?>> deleteNote(int id);
+  Future<Either<Failure, List<NoteEntity>>> fetchNotes();
 }
