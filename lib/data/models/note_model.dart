@@ -5,7 +5,6 @@ class NoteModel extends NoteEntity {
     required int id,
     required super.title,
     required super.content,
-    required DateTime createdAt, 
     required super.updatedAt,
     required super.isArchived,
     required super.isPinned,
@@ -14,12 +13,12 @@ class NoteModel extends NoteEntity {
           id: id.toString(),
         );
 
+
   factory NoteModel.fromMap(Map<String, dynamic> map) {
     return NoteModel(
       id: map['id'],
       title: map['title'],
       content: map['content'],
-      createdAt: DateTime.parse(map['createdAt']),
       updatedAt: DateTime.parse(map['updatedAt']),
       isArchived: map['isArchived'] == 1,
       isPinned: map['isPinned'] == 1,
@@ -32,6 +31,7 @@ class NoteModel extends NoteEntity {
       'id': int.parse(id),
       'title': title,
       'content': content,
+      'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'isArchived': isArchived ? 1 : 0,
       'isPinned': isPinned ? 1 : 0,
@@ -52,7 +52,6 @@ class NoteModel extends NoteEntity {
       id: id ??  int.parse(this.id),
       title: title ?? this.title,
       content: content ?? this.content,
-      createdAt: createdAt, // Mantendo o valor original
       updatedAt: updatedAt ?? this.updatedAt,
       isArchived: isArchived ?? this.isArchived,
       isPinned: isPinned ?? this.isPinned,
