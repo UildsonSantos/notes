@@ -1,8 +1,8 @@
 import 'package:note/domain/entities/entities.dart';
 
 class NoteModel extends NoteEntity {
-  NoteModel({
-    required super.id,
+   NoteModel({
+    required int id,
     required super.title,
     required super.content,
     required DateTime createdAt, 
@@ -10,7 +10,9 @@ class NoteModel extends NoteEntity {
     required super.isArchived,
     required super.isPinned,
     required super.isCompleted,
-  });
+  }) : super(
+          id: id.toString(),
+        );
 
   factory NoteModel.fromMap(Map<String, dynamic> map) {
     return NoteModel(
@@ -27,7 +29,7 @@ class NoteModel extends NoteEntity {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': int.parse(id),
       'title': title,
       'content': content,
       'updatedAt': updatedAt.toIso8601String(),
@@ -38,7 +40,7 @@ class NoteModel extends NoteEntity {
   }
 
   NoteModel copyWith({
-    String? id,
+    int? id,
     String? title,
     String? content,
     DateTime? updatedAt,
@@ -47,7 +49,7 @@ class NoteModel extends NoteEntity {
     bool? isCompleted,
   }) {
     return NoteModel(
-      id: id ?? this.id,
+      id: id ??  int.parse(this.id),
       title: title ?? this.title,
       content: content ?? this.content,
       createdAt: createdAt, // Mantendo o valor original

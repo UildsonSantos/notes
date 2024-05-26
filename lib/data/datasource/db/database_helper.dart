@@ -40,7 +40,7 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $tableName (
-        $id TEXT PRIMARY KEY,
+        $id INTEGER PRIMARY KEY AUTOINCREMENT,
         $title TEXT NOT NULL,
         $content TEXT,
         $createdAt TEXT,
@@ -60,7 +60,7 @@ class DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     // Criar um novo NoteModel com o ID atualizado
-    final noteWithId = note.copyWith(id: id.toString());
+    final noteWithId = note.copyWith(id: id);
     return noteWithId;
   }
 
