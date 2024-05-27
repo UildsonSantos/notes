@@ -55,4 +55,29 @@ class NoteModel extends NoteEntity {
       isCompleted: isCompleted ?? this.isCompleted,
     );
   }
+
+  factory NoteModel.fromEntity(NoteEntity entity) {
+    return NoteModel(
+      id: entity.id,
+      title: entity.title,
+      content: entity.content,
+      updatedAt: entity.updatedAt,
+      isArchived: entity.isArchived,
+      isPinned: entity.isPinned,
+      isCompleted: entity.isCompleted,
+    );
+  }
+
+  NoteEntity toEntity() {
+    return NoteEntity(
+      id: id,
+      title: title,
+      content: content,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      isArchived: isArchived,
+      isPinned: isPinned,
+      isCompleted: isCompleted,
+    );
+  }
 }
