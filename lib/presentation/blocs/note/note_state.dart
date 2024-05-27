@@ -11,7 +11,7 @@ final class NoteInitial extends NoteState {}
 
 final class NoteEmptyState extends NoteState {}
 
-class LoadingNoteState extends NoteState {}
+final class LoadingNoteState extends NoteState {}
 
 final class FetchNoteState extends NoteState {
   final List<NoteEntity> notes;
