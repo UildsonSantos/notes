@@ -15,6 +15,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   NoteBloc(this.fetchNotesUseCase, this.addNoteUseCase) : super(NoteInitial()) {
     on<FetchNotesEvent>(fetchNotes);
     on<AddNoteEvent>(addNote);
+    on<FetchNotesAfterAddingEvent>(fetchNotesAfterAdding);
   }
 
   FutureOr<void> fetchNotes(event, emit) async {
@@ -22,7 +23,6 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
     try {
       final result = await fetchNotesUseCase.call();
-
       result.fold(
         (failure) => emit(NoteErrorState(failure.message)),
         (notes) {
@@ -38,7 +38,26 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     }
   }
 
-  FutureOr<void> addNote(AddNoteEvent event, Emitter<NoteState> emit) async {
+  Future<void> fetchNotesAfterAdding(event, emit) async {
+    try {
+      final result = await fetchNotesUseCase.call();
+
+      result.fold(
+        (failure) => emit(NoteErrorState(failure.message)),
+        (notes) {
+          if (notes.isEmpty) {
+            emit(NoteEmptyState());
+          } else {
+            emit(LoadedNoteAfterAddingState(notes));
+          }
+        },
+      );
+    } catch (e) {
+      emit(NoteErrorState('Error loading notes: $e'));
+    }
+  }
+
+  FutureOr<void> addNote(event, emit) async {
     try {
       final result = await addNoteUseCase.call(event.note);
       result.fold(
