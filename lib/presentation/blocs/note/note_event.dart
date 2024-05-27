@@ -8,3 +8,14 @@ sealed class NoteEvent extends Equatable {
 }
 
 final class FetchNotesEvent extends NoteEvent {}
+
+final class AddNoteEvent extends NoteEvent {
+  final NoteEntity note;
+
+  const AddNoteEvent(this.note);
+
+  @override
+  List<Object> get props => [note];
+}
+
+final class FetchNotesAfterAddingEvent extends NoteEvent {}

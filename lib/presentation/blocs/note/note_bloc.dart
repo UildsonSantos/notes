@@ -10,9 +10,11 @@ part 'note_state.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final FetchNotes fetchNotesUseCase;
+  final AddNote addNoteUseCase;
 
-  NoteBloc(this.fetchNotesUseCase) : super(NoteInitial()) {
+  NoteBloc(this.fetchNotesUseCase, this.addNoteUseCase) : super(NoteInitial()) {
     on<FetchNotesEvent>(fetchNotes);
+    on<AddNoteEvent>(addNote);
   }
 
   FutureOr<void> fetchNotes(event, emit) async {
@@ -33,6 +35,18 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       );
     } catch (e) {
       emit(NoteErrorState('Error loading notes: $e'));
+    }
+  }
+
+  FutureOr<void> addNote(AddNoteEvent event, Emitter<NoteState> emit) async {
+    try {
+      final result = await addNoteUseCase.call(event.note);
+      result.fold(
+        (failure) => emit(NoteErrorState(failure.message)),
+        (note) => add(FetchNotesAfterAddingEvent()),
+      );
+    } catch (e) {
+      emit(NoteErrorState('Failed to add the note to the database: $e'));
     }
   }
 }
