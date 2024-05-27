@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:note/injection_container.dart';
 import 'package:note/presentation/blocs/blocs.dart';
 
 class HomePage extends StatelessWidget {
@@ -8,13 +7,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  BlocProvider(
-      create: (context) => sl<NoteBloc>()..add(FetchNotesEvent()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Notes'),
-        ),
-        body: BlocBuilder<NoteBloc, NoteState>(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notes'),
+      ),
+      body: BlocBuilder<NoteBloc, NoteState>(
         builder: (context, state) {
           if (state is NoteInitial) {
             return const Center(child: Text('Welcome to Note App'));
@@ -45,7 +42,6 @@ class HomePage extends StatelessWidget {
           // Implement action to add a note
         },
         child: const Icon(Icons.add),
-      ),
       ),
     );
   }
