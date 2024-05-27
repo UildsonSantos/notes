@@ -7,7 +7,7 @@ import 'package:note/domain/entities/entities.dart';
 import 'package:note/domain/repositories/repositories.dart';
 
 class NoteRepositoryImpl implements NoteRepository {
-  final NoteLocalDataSourceImpl _dataSource;
+  final NoteDataSource _dataSource;
 
   NoteRepositoryImpl(this._dataSource);
 
