@@ -28,3 +28,12 @@ final class DeleteNoteEvent extends NoteEvent {
   @override
   List<Object> get props => [note];
 }
+
+class UpdateNoteEvent extends NoteEvent {
+  final NoteEntity note;
+
+  const UpdateNoteEvent(this.note);
+
+  @override
+  List<Object> get props => [note];
+}

@@ -12,16 +12,19 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final FetchNotes fetchNotesUseCase;
   final AddNote addNoteUseCase;
   final DeleteNote deleteNoteUseCase;
+  final UpdateNote updateNoteUseCase;
 
   NoteBloc(
     this.fetchNotesUseCase,
     this.addNoteUseCase,
     this.deleteNoteUseCase,
+    this.updateNoteUseCase,
   ) : super(NoteInitial()) {
     on<FetchNotesEvent>(fetchNotes);
     on<AddNoteEvent>(addNote);
     on<FetchNotesAfterAddingEvent>(fetchNotesAfterAdding);
     on<DeleteNoteEvent>(deleteNote);
+    on<UpdateNoteEvent>(updateNote);
   }
 
   FutureOr<void> fetchNotes(event, emit) async {
@@ -91,6 +94,29 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       } catch (e) {
         emit(NoteErrorState('Failed to delete the note to the database: $e'));
       }
+    }
+  }
+
+  FutureOr<void> updateNote(
+      UpdateNoteEvent event, Emitter<NoteState> emit) async {
+    try {
+      final result = await updateNoteUseCase.call(event.note);
+      result.fold(
+        (failure) => emit(NoteErrorState(failure.message)),
+        (id) {
+          if (id != null) {
+            final updatedNotes = (state as NoteLoadedState).notes.map((note) {
+              return note.id == id ? event.note : note;
+            }).toList();
+            emit(NoteLoadedState(updatedNotes));
+          } else {
+            emit(const NoteErrorState(
+                'Failed to update the note: returned ID is null'));
+          }
+        },
+      );
+    } catch (e) {
+      emit(NoteErrorState('Failed to update the note to the database: $e'));
     }
   }
 }
