@@ -71,6 +71,7 @@ class EditNotePageState extends State<EditNotePage> {
     );
 
     BlocProvider.of<NoteBloc>(context).add(UpdateNoteEvent(updatedNote));
+    context.read<NoteBloc>().add(FetchNotesEvent());
     Navigator.pop(context);
   }
 }
