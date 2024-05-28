@@ -80,21 +80,26 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   FutureOr<void> deleteNote(event, emit) async {
     if (state is NoteLoadedState) {
-      final updatedNotes =
-          List<NoteEntity>.from((state as NoteLoadedState).notes)
-            ..removeWhere((note) => note.id == event.note.id);
-
-      emit(NoteLoadedState(updatedNotes));
-      try {
-        final result = await deleteNoteUseCase.call(event.note.id);
-        result.fold(
-          (failure) => emit(NoteErrorState(failure.message)),
-          (id) => emit(NoteLoadedState(updatedNotes)),
-        );
-      } catch (e) {
-        emit(NoteErrorState('Failed to delete the note to the database: $e'));
-      }
+    try {
+      // Attempt to delete the note using the use case
+      final result = await deleteNoteUseCase.call(event.note.id);
+      
+      result.fold(
+        (failure) {
+          // Emit an error state if the deletion fails
+          emit(NoteErrorState(failure.message));
+        },
+        (id) {
+          // If deletion is successful, remove the note from the state
+          final updatedNotes = (state as NoteLoadedState).notes.where((note) => note.id != event.note.id).toList();
+          emit(NoteLoadedState(updatedNotes));
+        },
+      );
+    } catch (e) {
+      // Emit an error state if an exception occurs
+      emit(NoteErrorState('Failed to delete the note from the database: $e'));
     }
+  }
   }
 
   FutureOr<void> updateNote(
