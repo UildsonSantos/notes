@@ -34,9 +34,23 @@ class _HomePageState extends State<HomePage> {
               itemCount: state.notes.length,
               itemBuilder: (context, index) {
                 final note = state.notes[index];
-                return ListTile(
-                  title: Text(note.title),
-                  subtitle: Text(note.content),
+                return Dismissible(
+                  key: Key(note.id.toString()),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction) {
+                    BlocProvider.of<NoteBloc>(context)
+                        .add(DeleteNoteEvent(note));
+                  },
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  child: ListTile(
+                    title: Text(note.title),
+                    subtitle: Text(note.content),
+                  ),
                 );
               },
             );
