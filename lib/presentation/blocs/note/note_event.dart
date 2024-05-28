@@ -19,3 +19,12 @@ final class AddNoteEvent extends NoteEvent {
 }
 
 final class FetchNotesAfterAddingEvent extends NoteEvent {}
+
+final class DeleteNoteEvent extends NoteEvent {
+  final NoteEntity note;
+
+  const DeleteNoteEvent(this.note);
+
+  @override
+  List<Object> get props => [note];
+}

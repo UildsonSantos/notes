@@ -9,11 +9,12 @@ final sl = GetIt.instance; // sl stands for service locator
 
 Future<void> init() async {
   // Blocs
-  sl.registerFactory(() => NoteBloc(sl(), sl()));
+  sl.registerFactory(() => NoteBloc(sl(), sl(), sl()));
 
   // Use cases
   sl.registerLazySingleton(() => FetchNotes(sl()));
   sl.registerLazySingleton(() => AddNote(sl()));
+  sl.registerLazySingleton(() => DeleteNote(sl()));
 
   // Repository
   sl.registerLazySingleton<NoteRepository>(
