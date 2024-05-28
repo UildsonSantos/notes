@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:note/domain/entities/entities.dart';
 import 'package:note/presentation/blocs/blocs.dart';
 import 'package:note/presentation/pages/pages.dart';
 
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is NoteLoadedState) {
             return ListView.builder(
+              
               itemCount: state.notes.length,
               itemBuilder: (context, index) {
                 final note = state.notes[index];
@@ -59,9 +61,14 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  child: ListTile(
-                    title: Text(note.title),
-                    subtitle: Text(note.content),
+                  child: GestureDetector(
+                    onLongPress: () {
+                      _handleUpdateNotePressed(note);
+                    },
+                    child: ListTile(
+                      title: Text(note.title),
+                      subtitle: Text(note.content),
+                    ),
                   ),
                 );
               },
@@ -84,6 +91,14 @@ class _HomePageState extends State<HomePage> {
           );
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _handleUpdateNotePressed(NoteEntity note) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditNotePage(note: note),
       ),
     );
   }
