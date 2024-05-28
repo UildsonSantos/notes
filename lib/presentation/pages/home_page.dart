@@ -38,6 +38,18 @@ class _HomePageState extends State<HomePage> {
                   key: Key(note.id.toString()),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) {
+                    final snackBar = SnackBar(
+                      content: Text('Note ${note.title.toUpperCase()} deleted?'),
+                      action: SnackBarAction(
+                        label: 'Undo',
+                        onPressed: () {
+                          BlocProvider.of<NoteBloc>(context)
+                              .add(AddNoteEvent(note));
+                        },
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                     BlocProvider.of<NoteBloc>(context)
                         .add(DeleteNoteEvent(note));
                   },
