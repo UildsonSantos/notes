@@ -13,8 +13,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final AddNote addNoteUseCase;
   final DeleteNote deleteNoteUseCase;
 
-  NoteBloc(this.fetchNotesUseCase, this.addNoteUseCase, this.deleteNoteUseCase)
-      : super(NoteInitial()) {
+  NoteBloc(
+    this.fetchNotesUseCase,
+    this.addNoteUseCase,
+    this.deleteNoteUseCase,
+  ) : super(NoteInitial()) {
     on<FetchNotesEvent>(fetchNotes);
     on<AddNoteEvent>(addNote);
     on<FetchNotesAfterAddingEvent>(fetchNotesAfterAdding);
@@ -51,7 +54,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
           if (notes.isEmpty) {
             emit(NoteEmptyState());
           } else {
-            emit(LoadedNoteAfterAddingState(notes));
+            emit(NoteLoadedState(notes));
           }
         },
       );

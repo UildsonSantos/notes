@@ -21,15 +21,6 @@ final class FetchNoteState extends NoteState {
   List<Object> get props => [];
 }
 
-final class LoadedNoteAfterAddingState extends NoteState {
-  final List<NoteEntity> notes;
-
-  const LoadedNoteAfterAddingState(this.notes);
-
-  @override
-  List<Object> get props => [notes];
-}
-
 final class NoteLoadedState extends NoteState {
   final List<NoteEntity> notes;
 
