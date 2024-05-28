@@ -42,12 +42,13 @@ class _HomePageState extends State<HomePage> {
                     _handleDeleteNotePressed(note, context);
                   },
                   background: Container(
-                    color: Colors.red,
+                    color: Colors.purple,
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  child: GestureDetector(
+                  child: InkWell(
+                    splashColor:  Colors.deepPurple,
                     onLongPress: () {
                       _handleUpdateNotePressed(note);
                     },
